@@ -1,0 +1,15 @@
+# Persönliche Konfiguration (enthält TMDb-Key etc.)
+.env
+
+# Container-Konfiguration/State (wird beim ersten Start automatisch erzeugt)
+config/
+
+# Medien-Bibliothek (Standardpfad, falls MEDIA_PATH=./media verwendet wird)
+media/
+
+# Rust Build-Artefakte
+trailerfin_rust/target/
+
+# Sonstiges
+.DS_Store
+*.log

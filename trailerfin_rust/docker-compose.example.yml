@@ -1,0 +1,54 @@
+# ============================================================
+# Beispiel-Konfiguration: Trailerfin (dieser Fork) + ytdlp2STRM
+# Getestet und funktionsfähig, inkl. Sprachpräferenz (Deutsch mit
+# automatischem Fallback) und ohne IMDb-Scraping.
+#
+# WICHTIG: Nach dem ersten Start von ytdlp2strm müssen zwei
+# Einstellungen einmalig korrigiert werden (siehe README.md,
+# Abschnitt "Wichtige Voraussetzung: ytdlp2STRM korrekt konfigurieren"),
+# da die Standard-Config von ytdlp2STRM sonst nicht funktioniert:
+#
+#   docker exec ytdlp2strm sh -c "sed -i 's/127.0.0.1/0.0.0.0/' config/config.json"
+#   docker exec ytdlp2strm sh -c "sed -i 's/\"cookie_value\" : \"firefox\",/\"cookie_value\" : \"\",/' plugins/youtube/config.json"
+#   docker restart ytdlp2strm
+# ============================================================
+
+services:
+
+  ytdlp2strm:
+    build: https://github.com/fe80Grau/ytdlp2STRM.git
+    container_name: ytdlp2strm
+    environment:
+      - TZ=Europe/Berlin
+    volumes:
+      - ./config/ytdlp2strm:/app/config
+    ports:
+      - 5000:5000
+    restart: unless-stopped
+
+  trailerfin:
+    # Erwartet einen lokalen Ordner "trailerfin_rust" neben dieser Datei,
+    # z.B. per: git clone https://github.com/<dein-username>/trailerfin_rust.git
+    build: ./trailerfin_rust
+    container_name: trailerfin
+    environment:
+      - TRAILERFIN_DATA_SOURCE=tmdb
+      - TRAILERFIN_TMDB_API_KEY=DEIN_TMDB_API_KEY_HIER_EINTRAGEN
+      - TRAILERFIN_SCAN_PATH=/data
+      - TRAILERFIN_MOVIE_FOLDERS=Filme
+      - TRAILERFIN_TV_FOLDERS=Serien
+      - TRAILERFIN_THREADS=4
+      - TRAILERFIN_SHOULD_SCHEDULE=true
+      - TRAILERFIN_SCHEDULE=0 0 0 * * *
+      - TRAILERFIN_VIDEO_FILENAME=trailer.strm
+      - TRAILERFIN_YTDLP_PROXY_URL=http://ytdlp2strm:5000
+      - TRAILERFIN_PREFERRED_LANGUAGE=de-DE
+    volumes:
+      # Pfad links an deine eigene Medienstruktur anpassen. Muss die
+      # Unterordner enthalten, die in MOVIE_FOLDERS/TV_FOLDERS genannt sind
+      # (hier also .../Filme und .../Serien).
+      - ./media:/data
+      - ./config/trailerfin:/config
+    restart: unless-stopped
+    depends_on:
+      - ytdlp2strm

@@ -1,0 +1,10 @@
+# Netscape HTTP Cookie File
+# Diese Datei ist standardmäßig leer - das System funktioniert damit für
+# die meisten (nicht altersbeschränkten) Trailer einwandfrei.
+#
+# Für altersbeschränkte YouTube-Videos kannst du optional echte Cookies
+# eines YouTube-Accounts hier einfügen (Netscape-Format). Siehe README.md,
+# Abschnitt "Optional: Altersbeschränkte Trailer freischalten".
+#
+# EMPFEHLUNG: Nutze dafür einen separaten "Wegwerf"-Google-Account statt
+# deines Hauptkontos, da diese Datei eine aktive Login-Sitzung enthält.
